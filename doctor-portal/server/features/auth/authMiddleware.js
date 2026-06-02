@@ -26,25 +26,28 @@ const authenticateToken = async (req, res, next) => {
     return res.status(401).json({ message: 'Authentication required' });
   }
 
+  const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+  const tryDecode = async (secret) => {
+    const decoded = await verifyWithSecret(token, secret);
+    const userId = decoded.userId || decoded.sub;
+    if (!userId) throw new Error('no userId in payload');
+    if (!UUID_RE.test(String(userId))) throw new Error('non-uuid userId (old session)');
+    return userId;
+  };
+
   try {
-    const decoded = await verifyWithSecret(token, JWT_SECRET);
-    req.userId = decoded.userId || decoded.sub;
-    if (!req.userId) return res.status(403).json({ message: 'Invalid token payload' });
+    req.userId = await tryDecode(JWT_SECRET);
     return next();
   } catch (primaryError) {
     for (const fallbackSecret of JWT_FALLBACK_SECRETS) {
       try {
-        const decoded = await verifyWithSecret(token, fallbackSecret);
-        req.userId = decoded.userId || decoded.sub;
-        if (!req.userId) return res.status(403).json({ message: 'Invalid token payload' });
+        req.userId = await tryDecode(fallbackSecret);
         return next();
-      } catch (_fallbackError) {
-        // continue trying fallback secrets
-      }
+      } catch { /* try next */ }
     }
-
-    console.log('❌ Token verification failed for:', req.method, req.url, '| Error:', primaryError.message);
-    return res.status(403).json({ message: 'Invalid or expired session' });
+    // Token is invalid or contains a MongoDB ObjectId from the old system
+    return res.status(403).json({ message: 'Session expired. Please log in again.' });
   }
 };
 
