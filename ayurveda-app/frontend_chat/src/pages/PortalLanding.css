@@ -1,0 +1,321 @@
+/* Portal hub design (8080) — transformed: card grid + intro, not full viewport split */
+
+.landing {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #0a0e14;
+  font-family: 'Inter', system-ui, sans-serif;
+}
+
+.landing__top {
+  flex-shrink: 0;
+  padding: 1.15rem 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(10, 15, 22, 0.97);
+}
+
+.landing__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  max-width: 72rem;
+  margin: 0 auto;
+}
+
+.landing__brand-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 0.65rem;
+  background: linear-gradient(135deg, #28328c, #14bef0);
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 900;
+}
+
+.landing__brand-title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #f8fafc;
+  letter-spacing: -0.02em;
+}
+
+.landing__brand-tag {
+  margin: 0.15rem 0 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #94a3b8;
+}
+
+/* Intro band — replaces naked 50/50 split */
+.landing__hero-band {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 2rem 1.5rem 1.5rem;
+  max-width: 40rem;
+  margin: 0 auto;
+}
+
+.landing__hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+.landing__hero-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 3.5vw, 1.85rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  color: #f1f5f9;
+}
+
+.landing__hero-lead {
+  margin: 0.75rem 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #94a3b8;
+}
+
+/* Two role cards — side by side on desktop, stacked on mobile */
+.landing__panels {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+  max-width: 72rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 1.25rem 2rem;
+  align-content: start;
+}
+
+.landing__panel {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 26rem;
+  padding: 2rem 1.5rem;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+
+.landing__panel-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.03);
+  transition: transform 6s ease;
+}
+
+.landing__panel:hover .landing__panel-bg {
+  transform: scale(1.06);
+}
+
+.landing__panel--patient .landing__panel-bg {
+  background-image: url('https://images.unsplash.com/photo-1609228743551-7377f330d4d1?w=1200&q=80');
+}
+
+.landing__panel--doctor .landing__panel-bg {
+  background-image: url('https://images.unsplash.com/photo-1519494026892-80bbd9d6afb6?w=1200&q=80');
+}
+
+.landing__panel-shade {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.landing__panel--patient .landing__panel-shade {
+  background: linear-gradient(165deg, rgba(15, 35, 80, 0.72) 0%, rgba(8, 20, 40, 0.9) 100%);
+}
+
+.landing__panel--doctor .landing__panel-shade {
+  background: linear-gradient(165deg, rgba(6, 60, 55, 0.75) 0%, rgba(8, 20, 30, 0.92) 100%);
+}
+
+.landing__panel-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+.landing__photo-ring {
+  padding: 4px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+}
+
+.landing__panel--patient .landing__photo-ring {
+  background: linear-gradient(135deg, #14bef0, #28328c);
+}
+
+.landing__panel--doctor .landing__photo-ring {
+  background: linear-gradient(135deg, #14b8a6, #0f766e);
+}
+
+.landing__photo {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.landing__card {
+  width: 100%;
+  padding: 1.35rem 1.2rem 1.2rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28);
+  text-align: center;
+}
+
+.landing__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.65rem;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.landing__badge--patient {
+  background: #eef2ff;
+  color: #28328c;
+}
+
+.landing__badge--doctor {
+  background: #f0fdfa;
+  color: #0f766e;
+}
+
+.landing__panel-title {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.landing__panel-sub {
+  margin: 0.35rem 0 1rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  color: #64748b;
+}
+
+.landing__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.landing__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border-radius: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.landing__btn:hover {
+  transform: translateY(-1px);
+}
+
+.landing__btn--primary.landing__btn--patient {
+  background: linear-gradient(135deg, #28328c, #14bef0);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(40, 50, 140, 0.35);
+}
+
+.landing__btn--primary.landing__btn--doctor {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(13, 148, 136, 0.35);
+}
+
+.landing__btn--outline {
+  background: #fff;
+  border: 2px solid #e2e8f0;
+  color: #334155;
+}
+
+.landing__btn--outline.landing__btn--patient:hover {
+  border-color: #14bef0;
+  color: #28328c;
+}
+
+.landing__btn--outline.landing__btn--doctor:hover {
+  border-color: #14b8a6;
+  color: #0f766e;
+}
+
+.landing__footer {
+  flex-shrink: 0;
+  text-align: center;
+  padding: 1rem 1.5rem 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.landing__footer p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media (max-width: 768px) {
+  .landing__panels {
+    grid-template-columns: 1fr;
+    max-width: 22rem;
+  }
+
+  .landing__panel {
+    min-height: 22rem;
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (min-width: 900px) {
+  .landing__panels {
+    gap: 1.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .landing__panel {
+    min-height: 28rem;
+  }
+}

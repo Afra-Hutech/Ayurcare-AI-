@@ -1,0 +1,17 @@
+{
+  "scripts": {
+    "portal": "npm run dev --prefix portal-hub",
+    "patient": "npm run dev --prefix ayurveda-app/frontend_chat",
+    "doctor": "npm run dev --prefix doctor-portal",
+    "docconnect": "npm run dev --prefix doctor-portal",
+    "api": "npm run dev --prefix doctor-portal/server",
+    "bot": "python api_server.py",
+    "start:all": "powershell -ExecutionPolicy Bypass -File scripts/start-all.ps1"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.38.0",
+    "html2canvas": "^1.4.1",
+    "react-chartjs-2": "^5.3.1"
+  }
+}

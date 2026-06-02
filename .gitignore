@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+.vite/
+
+# Environment files (contain secrets — never commit)
+.env
+.env.local
+.env.*.local
+doctor-portal/server/.env
+ayurveda-app/bot-brain/.env
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Uploaded user files
+doctor-portal/server/uploads/
+
+# Temp migration scripts
+doctor-portal/server/__*.js

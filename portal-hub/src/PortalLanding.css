@@ -1,0 +1,569 @@
+/* Portal hub — senior layout: mesh bg, animated avatars, card grid */
+
+.portal {
+  --portal-bg: #060a12;
+  --portal-surface: rgba(15, 23, 42, 0.72);
+  --portal-border: rgba(148, 163, 184, 0.12);
+  --patient-a: #38bdf8;
+  --patient-b: #6366f1;
+  --doctor-a: #2dd4bf;
+  --doctor-b: #0d9488;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  font-family: 'DM Sans', 'Inter', system-ui, sans-serif;
+  color: #e2e8f0;
+  background: var(--portal-bg);
+}
+
+.portal__mesh {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 80% 50% at 15% 20%, rgba(56, 189, 248, 0.18), transparent 55%),
+    radial-gradient(ellipse 70% 45% at 85% 75%, rgba(45, 212, 191, 0.16), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 50% 100%, rgba(99, 102, 241, 0.12), transparent 45%),
+    var(--portal-bg);
+}
+
+.portal__grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.04;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ── Header ── */
+.portal__header {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1.25rem clamp(1.25rem, 4vw, 2.5rem);
+  border-bottom: 1px solid var(--portal-border);
+  backdrop-filter: blur(12px);
+  background: rgba(6, 10, 18, 0.75);
+}
+
+.portal__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.portal__logo {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  background: linear-gradient(135deg, #4338ca, #0ea5e9);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  box-shadow: 0 8px 24px rgba(14, 165, 233, 0.35);
+}
+
+.portal__brand-name {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+}
+
+.portal__brand-sub {
+  margin: 0.12rem 0 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.portal__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #94a3b8;
+  border: 1px solid var(--portal-border);
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.portal__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 10px #34d399;
+  animation: status-pulse 2s ease-in-out infinite;
+}
+
+@keyframes status-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+/* ── Hero ── */
+.portal__hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 42rem;
+  margin: 0 auto;
+  padding: clamp(2rem, 5vw, 3rem) 1.5rem 1.5rem;
+}
+
+.portal__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.85rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #94a3b8;
+  border: 1px solid var(--portal-border);
+  background: rgba(15, 23, 42, 0.4);
+}
+
+.portal__headline {
+  margin: 0;
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.04em;
+  color: #f1f5f9;
+}
+
+.portal__headline-accent {
+  background: linear-gradient(90deg, #38bdf8, #a78bfa, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.portal__lead {
+  margin: 1rem auto 0;
+  max-width: 34rem;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: #94a3b8;
+}
+
+.portal__lead strong {
+  color: #cbd5e1;
+  font-weight: 700;
+}
+
+/* ── Card grid ── */
+.portal__grid {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1rem, 2.5vw, 1.75rem);
+  max-width: 76rem;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 clamp(1rem, 3vw, 2.5rem) clamp(2rem, 4vw, 3rem);
+  align-items: stretch;
+}
+
+.portal-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 1.5rem;
+  border: 1px solid var(--portal-border);
+  background: var(--portal-surface);
+  backdrop-filter: blur(16px);
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.45);
+}
+
+.portal-card__glow {
+  position: absolute;
+  inset: -40% -20% auto;
+  height: 60%;
+  pointer-events: none;
+  opacity: 0.5;
+  filter: blur(48px);
+}
+
+.portal-card--patient .portal-card__glow {
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.35), transparent 70%);
+}
+
+.portal-card--doctor .portal-card__glow {
+  background: radial-gradient(circle, rgba(45, 212, 191, 0.35), transparent 70%);
+}
+
+.portal-card__visual {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 14rem;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.portal-card__body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0 1.5rem 1.5rem;
+}
+
+.portal-card__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  align-self: flex-start;
+  margin-bottom: 0.65rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.portal-card__badge--patient {
+  background: rgba(56, 189, 248, 0.15);
+  color: #7dd3fc;
+}
+
+.portal-card__badge--doctor {
+  background: rgba(45, 212, 191, 0.15);
+  color: #5eead4;
+}
+
+.portal-card__title {
+  margin: 0;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: #f8fafc;
+}
+
+.portal-card__tagline {
+  margin: 0.4rem 0 1rem;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  color: #94a3b8;
+}
+
+.portal-card__features {
+  list-style: none;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.portal-card__features li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #cbd5e1;
+}
+
+.portal-card__features li svg {
+  flex-shrink: 0;
+  color: #64748b;
+}
+
+.portal-card--patient .portal-card__features li svg {
+  color: var(--patient-a);
+}
+
+.portal-card--doctor .portal-card__features li svg {
+  color: var(--doctor-a);
+}
+
+.portal-card__actions {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.portal-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.8rem 1.1rem;
+  border-radius: 0.75rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.portal-btn:hover {
+  transform: translateY(-2px);
+}
+
+.portal-btn__arrow {
+  margin-left: auto;
+  opacity: 0.7;
+  transition: transform 0.2s ease;
+}
+
+.portal-btn:hover .portal-btn__arrow {
+  transform: translateX(3px);
+}
+
+.portal-btn--primary.portal-btn--patient {
+  background: linear-gradient(135deg, #4338ca, #0ea5e9);
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(14, 165, 233, 0.35);
+}
+
+.portal-btn--primary.portal-btn--doctor {
+  background: linear-gradient(135deg, #0f766e, #14b8a6);
+  color: #fff;
+  box-shadow: 0 8px 28px rgba(20, 184, 166, 0.35);
+}
+
+.portal-btn--ghost {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--portal-border);
+  color: #e2e8f0;
+}
+
+.portal-btn--ghost.portal-btn--patient:hover {
+  border-color: rgba(56, 189, 248, 0.5);
+  background: rgba(56, 189, 248, 0.08);
+}
+
+.portal-btn--ghost.portal-btn--doctor:hover {
+  border-color: rgba(45, 212, 191, 0.5);
+  background: rgba(45, 212, 191, 0.08);
+}
+
+/* ── Animated avatars ── */
+.avatar-stage {
+  position: relative;
+  width: 11.5rem;
+  height: 11.5rem;
+  display: grid;
+  place-items: center;
+}
+
+.avatar-stage__svg {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.avatar-stage__ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid transparent;
+}
+
+.avatar-stage--patient .avatar-stage__ring {
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.avatar-stage--doctor .avatar-stage__ring {
+  border-color: rgba(45, 212, 191, 0.25);
+}
+
+.avatar-stage__ring--1 {
+  inset: 0;
+  animation: ring-spin 14s linear infinite;
+}
+
+.avatar-stage__ring--2 {
+  inset: 12%;
+  animation: ring-spin 10s linear infinite reverse;
+}
+
+.avatar-stage__ring--3 {
+  inset: 24%;
+  animation: ring-pulse 3s ease-in-out infinite;
+}
+
+.avatar-stage__orb {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+.avatar-stage--patient .avatar-stage__orb--a {
+  background: var(--patient-a);
+  top: 8%;
+  right: 18%;
+  animation: orb-float 4s ease-in-out infinite;
+}
+
+.avatar-stage--patient .avatar-stage__orb--b {
+  background: var(--patient-b);
+  bottom: 12%;
+  left: 10%;
+  animation: orb-float 5s ease-in-out infinite 0.8s;
+}
+
+.avatar-stage--doctor .avatar-stage__orb--a {
+  background: var(--doctor-a);
+  top: 10%;
+  left: 14%;
+  animation: orb-float 4.2s ease-in-out infinite;
+}
+
+.avatar-stage--doctor .avatar-stage__orb--b {
+  background: var(--doctor-b);
+  bottom: 14%;
+  right: 12%;
+  animation: orb-float 5.2s ease-in-out infinite 1s;
+}
+
+.avatar-float {
+  animation: avatar-bob 4s ease-in-out infinite;
+  transform-origin: center center;
+}
+
+.avatar-aura {
+  animation: aura-breathe 3.5s ease-in-out infinite;
+}
+
+.avatar-shadow {
+  animation: shadow-pulse 4s ease-in-out infinite;
+}
+
+.avatar-leaf--1 { animation: leaf-sway 3s ease-in-out infinite; transform-origin: 52px 95px; }
+.avatar-leaf--2 { animation: leaf-sway 3.4s ease-in-out infinite 0.4s; transform-origin: 148px 95px; }
+.avatar-leaf--3 { animation: leaf-sway 2.8s ease-in-out infinite 0.2s; transform-origin: 100px 38px; }
+
+.avatar-stethoscope {
+  animation: steth-sway 2.5s ease-in-out infinite;
+  transform-origin: 124px 108px;
+}
+
+.avatar-pulse-dot {
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+
+.avatar-ecg polyline {
+  stroke-dasharray: 120;
+  stroke-dashoffset: 120;
+  animation: ecg-draw 2s ease-in-out infinite;
+}
+
+@keyframes ring-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes ring-pulse {
+  0%, 100% { opacity: 0.35; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+@keyframes orb-float {
+  0%, 100% { transform: translate(0, 0); opacity: 0.9; }
+  50% { transform: translate(4px, -8px); opacity: 1; }
+}
+
+@keyframes avatar-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+@keyframes aura-breathe {
+  0%, 100% { opacity: 0.65; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes shadow-pulse {
+  0%, 100% { opacity: 0.2; }
+  50% { opacity: 0.35; }
+}
+
+@keyframes leaf-sway {
+  0%, 100% { transform: rotate(-4deg); }
+  50% { transform: rotate(6deg); }
+}
+
+@keyframes steth-sway {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(4deg); }
+}
+
+@keyframes dot-pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.35); opacity: 0.7; }
+}
+
+@keyframes ecg-draw {
+  0% { stroke-dashoffset: 120; }
+  45% { stroke-dashoffset: 0; }
+  55% { stroke-dashoffset: 0; }
+  100% { stroke-dashoffset: -120; }
+}
+
+/* ── Footer ── */
+.portal__footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 1.25rem 1.5rem 1.75rem;
+  border-top: 1px solid var(--portal-border);
+}
+
+.portal__footer p {
+  margin: 0;
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+@media (max-width: 820px) {
+  .portal__grid {
+    grid-template-columns: 1fr;
+    max-width: 24rem;
+  }
+
+  .portal__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .portal__status {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .portal-card__visual {
+    min-height: 16rem;
+  }
+
+  .avatar-stage {
+    width: 13rem;
+    height: 13rem;
+  }
+}

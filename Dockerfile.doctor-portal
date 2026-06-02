@@ -1,0 +1,28 @@
+# ── Stage 1: install production dependencies ──────────────────────────────────
+FROM node:20-alpine AS deps
+WORKDIR /app
+
+# Copy manifests only so this layer is cached until package*.json changes
+COPY doctor-portal/server/package*.json ./
+RUN npm ci --omit=dev --ignore-scripts
+
+# ── Stage 2: lean production image ────────────────────────────────────────────
+FROM node:20-alpine AS runner
+WORKDIR /app
+
+# Non-root user — principle of least privilege
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+# Only the installed modules + application code needed at runtime
+COPY --from=deps /app/node_modules ./node_modules
+COPY doctor-portal/server/ .
+
+USER appuser
+
+EXPOSE 5001
+
+# GET / → { "status": "running", "server": "DocConnect Backend" }
+HEALTHCHECK --interval=30s --timeout=10s --start-period=20s --retries=3 \
+  CMD wget -qO- http://localhost:5001/ || exit 1
+
+CMD ["node", "index.js"]

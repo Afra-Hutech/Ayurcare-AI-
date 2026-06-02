@@ -1,0 +1,22 @@
+PyPDF2>=3.0.0
+pdfplumber
+spacy
+sentence-transformers
+faiss-cpu
+
+# Optional for advanced relation extraction / LLM
+# transformers
+# openai (if you use remote APIs)
+
+# Backend API dependencies
+fastapi>=0.95.2
+uvicorn[standard]>=0.22.0
+google-genai
+motor>=3.3.0
+pymongo>=4.6.0
+python-dotenv>=1.0.0
+python-jose[cryptography]>=3.3.0
+certifi>=2024.0.0
+PyJWT>=2.8.0
+passlib[bcrypt]>=1.7.4
+python-multipart>=0.0.6

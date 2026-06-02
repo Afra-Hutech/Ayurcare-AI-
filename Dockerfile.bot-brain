@@ -1,0 +1,42 @@
+# ── Stage 1: build a virtual-env with all Python deps ─────────────────────────
+FROM python:3.11-slim AS builder
+WORKDIR /build
+
+RUN pip install --no-cache-dir --upgrade pip
+
+COPY ayurveda-app/bot-brain/requirements.txt .
+RUN python -m venv /opt/venv && \
+    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+# Pre-download the spaCy model into the venv so the container starts offline
+RUN /opt/venv/bin/python -m spacy download en_core_web_sm
+
+# ── Stage 2: lean production image ────────────────────────────────────────────
+FROM python:3.11-slim AS runner
+WORKDIR /app
+
+# Non-root user
+RUN addgroup --system appgroup && adduser --system --ingroup appgroup appuser
+
+# Copy the fully-installed venv from the builder stage
+COPY --from=builder /opt/venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Copy application source (vector_store/ is excluded via .dockerignore
+# and mounted as a volume at runtime — see docker-compose.yml)
+COPY ayurveda-app/bot-brain/ .
+
+# Ensure local module imports resolve (nlp/, candidate_engine, etc.)
+ENV PYTHONPATH=/app
+
+USER appuser
+
+EXPOSE 5002
+
+# api_server.py hard-codes uvicorn host=127.0.0.1 in its __main__ block.
+# We invoke uvicorn directly so it binds to 0.0.0.0 and is reachable from the host.
+# A TCP connect probe is used because FastAPI does not expose /health by default.
+HEALTHCHECK --interval=30s --timeout=15s --start-period=60s --retries=3 \
+  CMD python -c "import socket; s=socket.create_connection(('localhost',5002),2); s.close()" || exit 1
+
+CMD ["python", "-m", "uvicorn", "api_server:app", "--host", "0.0.0.0", "--port", "5002"]

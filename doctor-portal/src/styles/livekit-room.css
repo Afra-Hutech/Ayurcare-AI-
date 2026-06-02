@@ -1,0 +1,107 @@
+/* Keep LiveKit VideoConference inside the consultation frame */
+
+.lk-room-host {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  overflow: hidden;
+  background: #0f172a;
+  border-radius: 0.75rem;
+}
+
+.lk-room-host .lk-room-root,
+.lk-room-host .lk-room-container,
+.lk-room-host [data-lk-theme='default'] {
+  position: relative !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  width: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.lk-room-host .lk-room-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.lk-room-host .lk-video-conference {
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 auto !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.lk-room-host .lk-video-conference-inner,
+.lk-room-host .lk-focus-layout-wrapper,
+.lk-room-host .lk-grid-layout-wrapper {
+  flex: 1 1 0% !important;
+  min-height: 0 !important;
+  height: 100% !important;
+  max-height: 100% !important;
+  overflow: hidden !important;
+}
+
+.lk-room-host .lk-control-bar {
+  position: relative !important;
+  bottom: auto !important;
+  left: auto !important;
+  right: auto !important;
+  top: auto !important;
+  transform: none !important;
+  flex-shrink: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  border-top: 1px solid rgba(148, 163, 184, 0.25);
+  border-radius: 0 0 0.75rem 0.75rem;
+  padding: 12px 16px !important;
+  min-height: 56px !important;
+  gap: 10px !important;
+}
+
+.lk-room-host.lk-room-immersive {
+  min-height: 100% !important;
+  height: 100% !important;
+  border-radius: 0 !important;
+}
+
+.lk-room-host.lk-room-immersive .lk-control-bar {
+  min-height: 64px !important;
+  padding: 14px 24px !important;
+  border-radius: 0 !important;
+}
+
+.lk-room-host .lk-button,
+.lk-room-host .lk-button-group button {
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+}
+
+/* DocConnect header has End call — hide LiveKit's built-in Leave / Disconnect */
+.lk-room-host .lk-disconnect-button,
+.lk-room-host button.lk-disconnect-button,
+.lk-room-host [data-lk-source='leave'],
+.lk-room-host [data-lk-source='disconnect'],
+.lk-room-host button[aria-label*='Leave' i],
+.lk-room-host button[aria-label*='Disconnect' i] {
+  display: none !important;
+}

@@ -1,0 +1,96 @@
+services:
+
+  # ── MongoDB ──────────────────────────────────────────────────────────────────
+  mongo:
+    image: mongo:7
+    restart: unless-stopped
+    ports:
+      - "27017:27017"          # expose to host so local tools (Compass, mongosh) still work
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 15s
+      timeout: 10s
+      start_period: 20s
+      retries: 5
+
+  # ── DocConnect — doctor-portal Node/Express backend ──────────────────────────
+  doctor-portal:
+    build:
+      context: .
+      dockerfile: Dockerfile.doctor-portal
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      # Override URI so the service reaches the compose mongo service, not localhost
+      MONGODB_URI: mongodb://mongo:27017/doctor_portal
+      PORT: "5001"
+      # These are read from the root .env file (copy .env.example → .env and fill in)
+      JWT_SECRET:             ${JWT_SECRET}
+      LIVEKIT_URL:            ${LIVEKIT_URL:-}
+      LIVEKIT_API_KEY:        ${LIVEKIT_API_KEY:-}
+      LIVEKIT_API_SECRET:     ${LIVEKIT_API_SECRET:-}
+      PATIENT_APP_URL:        ${PATIENT_APP_URL:-http://localhost:5173}
+      STRIPE_SECRET_KEY:      ${STRIPE_SECRET_KEY:-}
+      STRIPE_PUBLISHABLE_KEY: ${STRIPE_PUBLISHABLE_KEY:-}
+      BOT_BRAIN_URL:          http://bot-brain:5002
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:5001/"]
+      interval: 30s
+      timeout: 10s
+      start_period: 20s
+      retries: 3
+
+  # ── Vaidya AI — Python/FastAPI bot-brain backend ─────────────────────────────
+  bot-brain:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot-brain
+    restart: unless-stopped
+    ports:
+      - "5002:5002"
+    environment:
+      MONGODB_URI:      mongodb://mongo:27017/ayurcare_bot
+      JWT_SECRET:       ${JWT_SECRET}
+      GEMINI_API_KEY:   ${GEMINI_API_KEY}
+      GEMINI_API_KEY_FALLBACK: ${GEMINI_API_KEY_FALLBACK:-}
+      GEMINI_MODEL_CHAIN: ${GEMINI_MODEL_CHAIN:-gemini-2.0-flash,gemini-1.5-flash}
+      # RAG tuning — default to bm25 in containers (avoids downloading 200 MB cross-encoder on start)
+      RERANKER_MODE:                  ${RERANKER_MODE:-bm25}
+      TOP_K_FAISS:                    ${TOP_K_FAISS:-20}
+      TOP_K_RERANK:                   ${TOP_K_RERANK:-5}
+      RETRIEVAL_SUFFICIENCY_THRESHOLD: ${RETRIEVAL_SUFFICIENCY_THRESHOLD:-0.25}
+      RETRIEVAL_CONTEXT_BUDGET_CHARS: ${RETRIEVAL_CONTEXT_BUDGET_CHARS:-6000}
+      REDIS_URL:                      ${REDIS_URL:-}
+      # DEV convenience auth (disable in production)
+      DEV_LOCAL_AUTH:   ${DEV_LOCAL_AUTH:-false}
+      DEV_DEMO_EMAIL:   ${DEV_DEMO_EMAIL:-}
+      DEV_DEMO_PASSWORD: ${DEV_DEMO_PASSWORD:-}
+    volumes:
+      # Mount the locally-built FAISS index so it persists outside the image.
+      # Build it first with: python ayurveda-app/bot-brain/vector_db_builder.py
+      # If the directory doesn't exist yet, create it: mkdir -p ayurveda-app/bot-brain/vector_store
+      - ./ayurveda-app/bot-brain/vector_store:/app/vector_store
+    depends_on:
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import socket; s=socket.create_connection(('localhost',5002),2); s.close()"]
+      interval: 30s
+      timeout: 15s
+      start_period: 60s
+      retries: 3
+
+volumes:
+  mongo_data:
+    driver: local
+
+networks:
+  default:
+    name: ayurcare_net

@@ -1,0 +1,455 @@
+﻿@import "tailwindcss";
+@import "./styles/livekit-room.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* DocConnect practitioner theme — medical teal (distinct from AyurCare patient blue) */
+:root {
+  --practo-blue: #0f766e;
+  --practo-cyan: #14b8a6;
+  --practo-bg: #f8f9fa;
+  --practo-white: #ffffff;
+  --practo-text: #1f2937;
+  --practo-text-light: #6b7280;
+  --practo-border: #e5e7eb;
+  --practo-sage-muted: #f0fdfa;
+
+  --portal-bg: var(--practo-bg);
+  --portal-surface: var(--practo-white);
+  --portal-surface-elevated: #ffffff;
+  --portal-text: var(--practo-text);
+  --portal-text-muted: var(--practo-text-light);
+  --portal-border: var(--practo-border);
+  --portal-accent: #0d9488;
+  --portal-accent-light: #14b8a6;
+}
+
+html.dark {
+  color-scheme: dark;
+  --practo-bg: #0a0f16;
+  --practo-white: #161f2e;
+  --practo-text: #f8fafc;
+  --practo-text-light: #c4d0e4;
+  --practo-border: #334155;
+  --practo-sage-muted: #1a2830;
+
+  --portal-bg: var(--practo-bg);
+  --portal-surface: var(--practo-white);
+  --portal-surface-elevated: #121a28;
+  --portal-text: var(--practo-text);
+  --portal-text-muted: var(--practo-text-light);
+  --portal-border: var(--practo-border);
+}
+
+@theme {
+  --color-primary-50: #eef2ff;
+  --color-primary-100: #e0e7ff;
+  --color-primary-200: #c7d2fe;
+  --color-primary-300: #a5b4fc;
+  --color-primary-400: #2dd4bf;
+  --color-primary-500: #14b8a6;
+  --color-primary-600: #0d9488;
+  --color-primary-700: #0f766e;
+  --color-primary-800: #115e59;
+  --color-primary-900: #134e4a;
+  --color-primary-950: #042f2e;
+
+  --color-whatsapp-bg: #f0f2f5;
+  --color-whatsapp-sage: #0d9488;
+  --color-whatsapp-light: #f0fdfa;
+}
+
+@layer base {
+  html, body, #root {
+    background-color: var(--portal-bg);
+    color: var(--portal-text);
+  }
+
+  body {
+    background-color: var(--portal-bg);
+    color: var(--portal-text);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  }
+
+  html.dark select,
+  html.dark option {
+    color: var(--practo-text);
+    background-color: var(--practo-white);
+  }
+
+  html.dark input::placeholder,
+  html.dark textarea::placeholder {
+    color: var(--practo-text-light);
+    opacity: 0.85;
+  }
+
+  .input-field {
+    @apply w-full h-[54px] px-6 rounded-2xl bg-slate-50 border-2 border-slate-100 
+           text-slate-700 font-bold placeholder:text-slate-300 placeholder:font-medium
+           focus:outline-none focus:ring-4 focus:ring-primary-500/10 focus:border-primary-500/50
+           transition-all duration-200 outline-none;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center rounded-2xl transition-all duration-300 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-primary {
+    @apply bg-primary-600 text-white hover:bg-primary-700;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-primary-600 border-2 border-primary-100 hover:border-primary-200;
+  }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(13, 148, 136, 0.35);
+}
+
+.message-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.message-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: all 200ms ease-out;
+}
+
+#root {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+}
+
+.neg-card {
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+}
+
+/* ─── Dark mode: surfaces ─────────────────────────────────────────────────── */
+html.dark .bg-white:not([class*="gradient"]):not([class*="from-"]):not(.keep-light-input) {
+  background-color: var(--portal-surface) !important;
+}
+
+html.dark .bg-slate-50,
+html.dark .bg-slate-100,
+html.dark .bg-gray-50,
+html.dark .bg-\[\#f8fafc\],
+html.dark .bg-\[\#F8F9FA\],
+html.dark .bg-\[\#faf9f8\],
+html.dark .bg-\[\#FDFDFE\],
+html.dark .bg-\[\#fcfcfd\],
+html.dark .bg-\[\#f7f8fa\],
+html.dark .bg-\[\#f0f4f7\] {
+  background-color: #121a28 !important;
+}
+
+html.dark .bg-\[var\(--practo-bg\)\]:not(.bg-\[\#0d9488\]) {
+  background-color: var(--practo-bg) !important;
+}
+
+html.dark .bg-\[var\(--practo-white\)\] {
+  background-color: var(--practo-white) !important;
+}
+
+html.dark .bg-primary-50,
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-50\/40,
+html.dark .bg-emerald-50\/95,
+html.dark .bg-indigo-50 {
+  background-color: #1e2a42 !important;
+}
+
+html.dark .bg-amber-50 {
+  background-color: #3d2e14 !important;
+}
+
+html.dark .bg-rose-50 {
+  background-color: #3d1a24 !important;
+}
+
+/* ─── Dark mode: text (high contrast) ─────────────────────────────────────── */
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-gray-900,
+html.dark .text-gray-800,
+html.dark .text-black {
+  color: #f8fafc !important;
+}
+
+html.dark .text-slate-700,
+html.dark .text-slate-600,
+html.dark .text-gray-700,
+html.dark .text-gray-600 {
+  color: #e2e8f0 !important;
+}
+
+html.dark .text-slate-500,
+html.dark .text-slate-400,
+html.dark .text-gray-500,
+html.dark .text-gray-400,
+html.dark .text-gray-300 {
+  color: #b8c5d9 !important;
+}
+
+html.dark .text-slate-300 {
+  color: #94a3b8 !important;
+}
+
+/* CSS variable text — high contrast (matches AyurCare patient portal) */
+html.dark .text-\[var\(--practo-text\)\] {
+  color: #f8fafc !important;
+}
+
+html.dark .text-\[var\(--practo-text-light\)\] {
+  color: #b8c5d9 !important;
+}
+
+html.dark .text-\[var\(--portal-text\)\] {
+  color: #f8fafc !important;
+}
+
+html.dark .text-\[var\(--portal-text-muted\)\] {
+  color: #b8c5d9 !important;
+}
+
+html.dark [class*="text-[var(--practo-text-light)]"].opacity-90,
+html.dark .opacity-90.text-\[var\(--practo-text-light\)\] {
+  opacity: 1 !important;
+  color: #b8c5d9 !important;
+}
+
+html.dark .text-primary-600,
+html.dark .text-primary-700,
+html.dark .text-\[\#28328c\] {
+  color: #5eead4 !important;
+}
+
+html.dark .text-emerald-600,
+html.dark .text-emerald-700,
+html.dark .text-emerald-800,
+html.dark .text-emerald-900,
+html.dark .text-emerald-950 {
+  color: #6ee7b7 !important;
+}
+
+html.dark .text-amber-700,
+html.dark .text-amber-800,
+html.dark .text-amber-900 {
+  color: #fcd34d !important;
+}
+
+html.dark .text-rose-500,
+html.dark .text-rose-600,
+html.dark .text-rose-700 {
+  color: #fda4af !important;
+}
+
+html.dark .text-teal-600,
+html.dark .text-teal-700 {
+  color: #5eead4 !important;
+}
+
+html.dark .text-\[\#aaaaaa\],
+html.dark .text-\[\#6d7b74\] {
+  color: #cbd5e1 !important;
+}
+
+/* ─── Dark mode: borders ──────────────────────────────────────────────────── */
+html.dark .border-slate-200,
+html.dark .border-slate-100,
+html.dark .border-slate-300,
+html.dark .border-gray-100,
+html.dark .border-gray-200,
+html.dark .border-\[\#e0e7ed\],
+html.dark .border-\[\#f0f4f7\],
+html.dark .border-white\/50,
+html.dark .border-dashed {
+  border-color: var(--portal-border) !important;
+}
+
+html.dark .border-emerald-100,
+html.dark .border-emerald-200,
+html.dark .border-primary-100,
+html.dark .border-primary-200 {
+  border-color: #4b5e8a !important;
+}
+
+/* ─── Dark mode: form controls ──────────────────────────────────────────── */
+html.dark input:not(.keep-light-input),
+html.dark textarea:not(.keep-light-input),
+html.dark select:not(.keep-light-input) {
+  color: #f1f5f9 !important;
+  background-color: #1e293b !important;
+  border-color: var(--portal-border) !important;
+}
+
+html.dark input.keep-light-input,
+html.dark textarea.keep-light-input {
+  color: #0f172a !important;
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+
+html.dark .input-field {
+  background-color: #1e293b !important;
+  border-color: var(--portal-border) !important;
+  color: #f1f5f9 !important;
+}
+
+html.dark .btn-secondary {
+  background-color: var(--portal-surface) !important;
+  border-color: var(--portal-border) !important;
+  color: #5eead4 !important;
+}
+
+/* ─── Dark mode: hovers & misc ────────────────────────────────────────────── */
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-gray-50:hover,
+html.dark .hover\:bg-\[\#f0f4f7\]:hover,
+html.dark .hover\:bg-rose-50:hover {
+  background-color: #2a3548 !important;
+}
+
+html.dark .hover\:text-\[\#28328c\]:hover,
+html.dark .hover\:text-primary-600:hover {
+  color: #5eead4 !important;
+}
+
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/90,
+html.dark .bg-emerald-50\/40,
+html.dark .bg-emerald-50\/50,
+html.dark .bg-primary-50,
+html.dark .bg-violet-50,
+html.dark .bg-blue-50 {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-\[\#f0f4f7\]:not(.bg-\[\#0d9488\]) {
+  background-color: #1e293b !important;
+}
+
+html.dark .bg-slate-100:not(.bg-\[\#0d9488\]):not(.bg-primary-600) {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+
+html.dark .border-dashed {
+  border-color: #475569 !important;
+}
+
+html.dark .border-teal-300,
+html.dark .border-teal-700 {
+  border-color: #475569 !important;
+}
+
+html.dark .medical-card,
+html.dark .stat-card {
+  background-color: var(--practo-white) !important;
+  border-color: var(--practo-border) !important;
+  color: var(--practo-text) !important;
+}
+
+html.dark .medical-card p,
+html.dark .stat-card p {
+  color: #b8c5d9 !important;
+}
+
+html.dark .medical-card h3,
+html.dark .stat-card h3,
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4 {
+  color: #f8fafc !important;
+}
+
+html.dark .shadow-sm {
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.45) !important;
+}
+
+html.dark .glass {
+  background: rgba(26, 35, 50, 0.95);
+  border-color: var(--portal-border);
+}
+
+html.dark .bg-white\/90,
+html.dark .bg-white\/60,
+html.dark .bg-white\/80 {
+  background-color: rgba(34, 45, 66, 0.95) !important;
+}
+
+html.dark .from-primary-50\/80,
+html.dark .from-primary-50\/55,
+html.dark .via-primary-50\/55,
+html.dark .to-emerald-50\/45,
+html.dark .to-indigo-50\/40 {
+  --tw-gradient-from: #1e293b !important;
+  --tw-gradient-to: #0f172a !important;
+  --tw-gradient-stops: var(--tw-gradient-from), #252f4a, var(--tw-gradient-to) !important;
+}
+
+html.dark .bg-\[\#82a18d\] {
+  background-color: #0d9488 !important;
+}
+
+html.dark .custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(45, 212, 191, 0.45);
+}
+
+html.dark .recharts-cartesian-grid line,
+html.dark .recharts-text {
+  stroke: #475569 !important;
+  fill: #cbd5e1 !important;
+}
+
+/* Active nav / badges stay readable */
+html.dark .bg-\[\#28328c\],
+html.dark .bg-primary-600,
+html.dark .bg-emerald-600,
+html.dark .bg-emerald-700 {
+  color: #ffffff !important;
+}
+
+html.dark .bg-emerald-50.text-emerald-600,
+html.dark .bg-slate-100.text-slate-600 {
+  color: inherit !important;
+}
+
+/* Legacy App-medical sidebar (if referenced) */
+html.dark .sidebar {
+  background-color: #161f2e !important;
+  border-right-color: #334155 !important;
+}
+
+html.dark .sidebar__brand-name,
+html.dark .sidebar__nav-item {
+  color: #cbd5e1 !important;
+}
+
+html.dark .sidebar__nav-item.active {
+  background-color: #0d9488 !important;
+  color: #fff !important;
+}

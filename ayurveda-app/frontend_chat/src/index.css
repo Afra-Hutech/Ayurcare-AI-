@@ -1,0 +1,749 @@
+@import "tailwindcss";
+@import "./styles/livekit-room.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+:root {
+  /* Practo-inspired Professional Medical Palette */
+  --practo-blue: #28328c;
+  --practo-cyan: #14bef0;
+  --practo-bg: #f0f4f7;
+  --practo-white: #ffffff;
+  --practo-text: #414146;
+  --practo-text-light: #787887;
+  --practo-border: #e0e7ed;
+  
+  /* AyurCare Refined */
+  --emerald-primary: #00a09b; /* Deep teal */
+  --teal-accent: #00796b;
+  --sage-light: #f1f8f7;
+  --slate-dark: #2d3e40;
+}
+
+html.dark {
+  color-scheme: dark;
+  --practo-bg: #0a0f16;
+  --practo-white: #161f2e;
+  --practo-text: #f8fafc;
+  --practo-text-light: #c4d0e4;
+  --practo-border: #334155;
+  --sage-light: #1a2830;
+  --emerald-primary: #34d399;
+}
+
+/* Base resets */
+html, body, #root, .app-root {
+  background-color: var(--practo-bg);
+  color: var(--practo-text);
+  font-family: 'Inter', 'Outfit', system-ui, sans-serif;
+  height: 100%;
+  height: 100dvh;
+  max-width: 100vw;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Shared patient portal page layout */
+.page-shell {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow-x: hidden;
+}
+
+.page-scroll {
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Vaidya AI: full-width conversation column */
+.chat-thread {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.chat-vaidya-root {
+  display: flex;
+  height: 100%;
+  min-height: 0;
+  width: 100%;
+  overflow: hidden;
+  background: var(--practo-bg);
+}
+
+.chat-vaidya-history {
+  flex-shrink: 0;
+  width: 280px;
+  min-width: 0;
+}
+
+.chat-vaidya-main {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.chat-vaidya-messages {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.chat-vaidya-composer {
+  flex-shrink: 0;
+  border-top: 1px solid var(--practo-border);
+  background: var(--practo-bg);
+}
+
+.chat-bubble-bot {
+  background: var(--practo-white);
+  border: 1px solid var(--practo-border);
+  color: var(--practo-text);
+  border-radius: 1rem 1rem 1rem 0.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.chat-bubble-user {
+  background: #28328c;
+  color: #fff;
+  border-radius: 1rem 1rem 0.25rem 1rem;
+}
+
+html.dark .chat-bubble-user {
+  background: #4f46e5;
+}
+
+.page-content {
+  width: 100%;
+  max-width: 1320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.75rem 0.75rem 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .page-content {
+    padding: 1rem 1rem 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-content {
+    padding: 1rem 1.25rem 1.5rem;
+  }
+}
+
+.portal-card {
+  background: var(--practo-white);
+  border: 1px solid var(--practo-border);
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+}
+
+/* Dark mode — common surfaces (patient portal) */
+html.dark .bg-white:not([class*="gradient"]):not([class*="from-"]) {
+  background-color: var(--practo-white) !important;
+}
+html.dark .bg-slate-50,
+html.dark .bg-slate-100,
+html.dark .bg-\[\#f7f8fa\],
+html.dark .bg-\[\#f0f4f7\] {
+  background-color: #121a28 !important;
+}
+html.dark .text-slate-900,
+html.dark .text-slate-800,
+html.dark .text-black,
+html.dark .text-gray-900,
+html.dark .text-gray-800 {
+  color: #f8fafc !important;
+}
+html.dark .text-slate-700,
+html.dark .text-slate-600,
+html.dark .text-gray-700,
+html.dark .text-gray-600 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-slate-500,
+html.dark .text-slate-400,
+html.dark .text-gray-500,
+html.dark .text-gray-400,
+html.dark .text-gray-300 {
+  color: #b8c5d9 !important;
+}
+html.dark .text-slate-300 {
+  color: #94a3b8 !important;
+}
+html.dark .text-\[\#28328c\]:not(.bg-\[\#28328c\] *):not(.bg-\[\#28328c\]) {
+  color: #a5b4fc !important;
+}
+html.dark .text-\[\#14bef0\] {
+  color: #38bdf8 !important;
+}
+html.dark .text-\[\#aaaaaa\],
+html.dark .text-\[\#6d7b74\],
+html.dark .text-\[\#787887\] {
+  color: #b8c5d9 !important;
+}
+html.dark .bg-slate-100:not([class*="gradient"]) {
+  background-color: #1e293b !important;
+}
+html.dark .bg-slate-100.text-slate-700,
+html.dark .bg-slate-100.text-slate-500 {
+  color: #e2e8f0 !important;
+}
+html.dark .text-emerald-900,
+html.dark .text-emerald-800,
+html.dark .text-emerald-700 {
+  color: #6ee7b7 !important;
+}
+html.dark .text-emerald-600 {
+  color: #34d399 !important;
+}
+html.dark .text-amber-800,
+html.dark .text-amber-900 {
+  color: #fcd34d !important;
+}
+html.dark .text-rose-600,
+html.dark .text-rose-700 {
+  color: #fda4af !important;
+}
+html.dark .text-blue-600 {
+  color: #60a5fa !important;
+}
+html.dark .text-violet-600 {
+  color: #a78bfa !important;
+}
+html.dark .border-slate-200,
+html.dark .border-slate-100,
+html.dark .border-gray-100,
+html.dark .border-\[\#e0e7ed\],
+html.dark .border-\[\#f0f4f7\] {
+  border-color: var(--practo-border) !important;
+}
+html.dark .hover\:bg-slate-100:hover,
+html.dark .hover\:bg-slate-50:hover,
+html.dark .hover\:bg-\[\#f0f4f7\]:hover {
+  background-color: #1e293b !important;
+}
+html.dark .auth-container {
+  background:
+    radial-gradient(900px 400px at 10% 10%, rgba(20, 190, 240, 0.08), transparent 60%),
+    radial-gradient(700px 300px at 85% 15%, rgba(40, 50, 140, 0.12), transparent 55%),
+    linear-gradient(140deg, #0b1018 0%, #121a28 45%, #0f1419 100%);
+}
+html.dark .auth-card,
+html.dark .glass-morphism {
+  background: rgba(21, 29, 43, 0.92);
+  border-color: var(--practo-border);
+}
+html.dark .auth-header h1,
+html.dark .form-group input {
+  color: #f1f5f9;
+}
+html.dark .form-group input {
+  background: #1a2332;
+  border-color: var(--practo-border);
+}
+html.dark .auth-header p,
+html.dark .auth-footer,
+html.dark .form-group label {
+  color: #b8c5d9;
+}
+
+/* Inputs, placeholders, prose */
+html.dark input,
+html.dark textarea,
+html.dark select {
+  color: #f1f5f9 !important;
+  background-color: #1e293b !important;
+  border-color: var(--practo-border) !important;
+}
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1;
+}
+html.dark .prose,
+html.dark .prose-slate,
+html.dark .prose p,
+html.dark .prose li,
+html.dark .prose strong {
+  color: #e2e8f0 !important;
+}
+html.dark .prose h1,
+html.dark .prose h2,
+html.dark .prose h3,
+html.dark .prose h4 {
+  color: #f8fafc !important;
+}
+html.dark .prose a {
+  color: #6ee7b7 !important;
+}
+
+/* Muted / tinted surfaces */
+html.dark .bg-slate-50\/80,
+html.dark .bg-slate-50\/90,
+html.dark .bg-emerald-50,
+html.dark .bg-emerald-50\/40,
+html.dark .bg-emerald-50\/50,
+html.dark .bg-emerald-50\/95,
+html.dark .bg-blue-50,
+html.dark .bg-rose-50,
+html.dark .bg-amber-50,
+html.dark .bg-violet-50,
+html.dark .bg-\[\#28328c\]\/5 {
+  background-color: #1e293b !important;
+}
+html.dark .bg-emerald-950\/30 {
+  background-color: rgba(6, 78, 59, 0.45) !important;
+}
+html.dark .border-dashed {
+  border-color: #475569 !important;
+}
+html.dark .border-emerald-200,
+html.dark .border-emerald-100,
+html.dark .border-blue-200,
+html.dark .border-amber-200 {
+  border-color: #475569 !important;
+}
+
+/* Headings utility classes */
+html.dark .heading-1,
+html.dark .heading-2,
+html.dark .heading-3 {
+  color: #f8fafc !important;
+}
+
+/* Chart empty states & secondary buttons on cards */
+html.dark .bg-slate-100:not(.bg-\[\#28328c\]) {
+  background-color: #334155 !important;
+  color: #e2e8f0 !important;
+}
+html.dark button.bg-slate-100,
+html.dark .rounded-lg.bg-slate-100 {
+  color: #e2e8f0 !important;
+}
+
+/* Sidebar / chat history inactive row */
+html.dark .hover\:bg-white\/80:hover {
+  background-color: #1e293b !important;
+}
+html.dark .border-\[\#e0e7ed\] {
+  border-color: var(--practo-border) !important;
+}
+html.dark .bg-\[\#f0f4f7\]:not(.bg-\[\#28328c\]) {
+  background-color: #1e293b !important;
+}
+html.dark .shadow-blue-100 {
+  --tw-shadow-color: rgba(15, 23, 42, 0.5);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.2);
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.4);
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Premium Glassmorphism Styles */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-dark {
+  background: rgba(15, 23, 42, 0.5);
+  backdrop-filter: blur(16px) saturate(200%);
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+.glass-light {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(16, 185, 129, 0.15);
+}
+
+/* Healing Color Palette */
+.text-ayur-sage { color: #10B981; }
+.bg-ayur-sage { background-color: #10B981; }
+.text-ayur-cream { color: #FEFEF8; }
+.bg-ayur-cream { background-color: #F5FAF8; }
+
+/* Animations */
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.8; }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 3s ease-in-out infinite;
+}
+
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.animate-glow {
+  animation: glow 3s ease-in-out infinite;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s ease-out;
+}
+
+/* Custom Scrollbar for specific containers */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(16, 185, 129, 0.15);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(16, 185, 129, 0.3);
+}
+
+/* Utility classes for patient portal */
+.card-glass {
+  @apply rounded-[24px] bg-white/60 backdrop-blur-lg border border-emerald-200/50 shadow-sm hover:shadow-lg transition;
+}
+
+.card-gradient {
+  @apply rounded-[32px] bg-gradient-to-br from-emerald-500 to-teal-500 text-white shadow-lg shadow-emerald-500/20;
+}
+
+.btn-primary {
+  @apply rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-emerald-500/30 hover:shadow-emerald-500/50 transition;
+}
+
+.btn-secondary {
+  @apply rounded-full border border-emerald-200 bg-white/80 px-6 py-3 text-sm font-semibold text-emerald-700 hover:bg-white transition;
+}
+
+.heading-1 {
+  @apply text-4xl md:text-5xl font-black tracking-tight text-slate-900;
+}
+
+.heading-2 {
+  @apply text-2xl md:text-3xl font-black tracking-tight text-slate-900;
+}
+
+.heading-3 {
+  @apply text-lg font-black text-slate-900;
+}
+
+
+.clinical-shadow {
+  box-shadow: 0 10px 40px -10px rgba(45, 64, 56, 0.08);
+}
+
+.premium-gradient-bg {
+  background: radial-gradient(circle at top left, rgba(78, 108, 97, 0.03), transparent 40%),
+              radial-gradient(circle at bottom right, rgba(232, 240, 237, 0.5), transparent 40%);
+}
+
+.prose p {
+  margin-bottom: 1.25em;
+  line-height: 1.7;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-clinical-enter {
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(78, 108, 107, 0.1);
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(78, 108, 107, 0.2);
+}
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.invisible-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Auth (Login/Signup) */
+.auth-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 20px;
+  background:
+    radial-gradient(900px 400px at 10% 10%, rgba(194, 225, 210, 0.45), transparent 60%),
+    radial-gradient(700px 300px at 85% 15%, rgba(164, 206, 190, 0.35), transparent 55%),
+    radial-gradient(800px 500px at 70% 90%, rgba(231, 239, 235, 0.8), transparent 65%),
+    linear-gradient(140deg, #f7fbf9 0%, #eef6f2 45%, #fdfcf7 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card {
+  width: min(520px, 92vw);
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(78, 108, 97, 0.15);
+  box-shadow: 0 30px 80px rgba(30, 44, 39, 0.12);
+  border-radius: 28px;
+  padding: 32px 36px 28px;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(18px) saturate(120%);
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.glass-morphism {
+  background: rgba(255, 255, 255, 0.78);
+  border: 1px solid rgba(78, 108, 97, 0.18);
+  box-shadow: 0 24px 70px rgba(30, 44, 39, 0.1);
+  backdrop-filter: blur(22px) saturate(135%);
+}
+
+.auth-header {
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.auth-logo {
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  display: grid;
+  place-items: center;
+  background: #ffffff;
+  border: 1px solid rgba(78, 108, 97, 0.2);
+  box-shadow: 0 12px 30px rgba(33, 52, 45, 0.12);
+  margin-bottom: 18px;
+}
+
+.auth-header h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1f2a26;
+  margin: 0 0 6px;
+}
+
+.auth-header p {
+  color: #5f6f67;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.auth-form {
+  display: grid;
+  gap: 16px;
+}
+
+.form-group {
+  display: grid;
+  gap: 8px;
+}
+
+.form-group label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #7b8b83;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 16px;
+  border: 1px solid rgba(78, 108, 97, 0.18);
+  background: rgba(248, 251, 249, 0.9);
+  color: #1e2a26;
+  font-weight: 600;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: rgba(60, 116, 94, 0.6);
+  box-shadow: 0 0 0 4px rgba(115, 164, 142, 0.18);
+  transform: translateY(-1px);
+}
+
+.auth-error {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(200, 58, 58, 0.08);
+  color: #8f1d1d;
+  font-weight: 700;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(200, 58, 58, 0.15);
+}
+
+.auth-submit-btn {
+  border: none;
+  border-radius: 18px;
+  padding: 14px 18px;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 12px;
+  cursor: pointer;
+  background: linear-gradient(135deg, #1b4638 0%, #2f6b57 40%, #53a07c 100%);
+  box-shadow: 0 18px 35px rgba(28, 73, 57, 0.3);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+}
+
+.auth-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 24px 45px rgba(28, 73, 57, 0.35);
+  filter: brightness(1.03);
+}
+
+.auth-submit-btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(0.5) brightness(0.95);
+  box-shadow: none;
+}
+
+.auth-footer {
+  margin-top: 18px;
+  text-align: left;
+  font-size: 12px;
+  color: #6a7a72;
+  font-weight: 600;
+}
+
+.auth-toggle-btn {
+  border: none;
+  background: none;
+  color: #2f6b57;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+}
+
+.auth-toggle-btn:hover {
+  color: #1b4638;
+}
+
+.loader {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  border-top-color: #ffffff;
+  display: inline-block;
+  animation: spin 0.9s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.auth-decoration {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, rgba(83, 160, 124, 0.35), rgba(83, 160, 124, 0.05));
+  filter: blur(0px);
+  opacity: 0.8;
+}
+
+.auth-decoration-1 {
+  top: -80px;
+  left: -90px;
+}
+
+.auth-decoration-2 {
+  bottom: -100px;
+  right: -60px;
+  background: radial-gradient(circle at 30% 30%, rgba(190, 156, 91, 0.32), rgba(190, 156, 91, 0.06));
+}
+
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 28px 22px 24px;
+  }
+
+  .auth-header h1 {
+    font-size: 24px;
+  }
+}

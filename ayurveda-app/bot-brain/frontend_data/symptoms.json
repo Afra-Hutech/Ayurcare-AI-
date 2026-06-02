@@ -1,0 +1,5 @@
+[
+  { "id": "1", "name": "Headache", "short": "Throbbing or steady pain", "details": "Common causes: stress, dehydration, sinus. Suggested: rest, hydration, consult if severe." },
+  { "id": "2", "name": "Cough", "short": "Dry or productive cough", "details": "May be viral or allergic. Suggested: steam, fluids, consult if persistent." },
+  { "id": "3", "name": "Fever", "short": "Elevated body temperature", "details": "Monitor temperature, rest, fluids. Seek medical care if >48h or high fever." }
+]

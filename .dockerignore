@@ -1,0 +1,47 @@
+# ── Version control ───────────────────────────────────────────────────────────
+.git
+.gitignore
+
+# ── Secrets — never bake these into images ────────────────────────────────────
+**/.env
+**/.env.*
+!**/.env.example
+!**/env.example
+
+# ── Node ──────────────────────────────────────────────────────────────────────
+**/node_modules
+**/npm-debug.log*
+**/dist
+**/build
+**/.next
+
+# ── Python ────────────────────────────────────────────────────────────────────
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.venv
+**/venv
+**/*.egg-info
+**/.pytest_cache
+**/.mypy_cache
+**/coverage
+**/.coverage
+
+# ── FAISS vector store — mounted as a volume at runtime, not baked in ─────────
+**/vector_store
+
+# ── OS / editor noise ─────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+**/.idea
+**/.vscode
+
+# ── Frontend build artifacts (not needed for backend images) ──────────────────
+**/frontend_chat/node_modules
+**/frontend_chat/dist
+**/doctor-portal/src
+**/doctor-portal/public
+**/doctor-portal/index.html
+**/doctor-portal/vite.config.*
+**/doctor-portal/tailwind.config.*
