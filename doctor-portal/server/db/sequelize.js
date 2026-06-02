@@ -1,15 +1,16 @@
 'use strict';
 /**
  * Sequelize singleton — PostgreSQL connection.
- * Replaces: mongoose.connect(MONGODB_URI)
  *
- * Required env vars:
- *   POSTGRES_URI  — full connection string: postgres://user:pass@host:5432/dbname
- *   Or split: PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD
+ * Priority order for the connection URI:
+ *   1. DATABASE_URL  — set automatically by Render, Supabase, Neon, Railway, Heroku
+ *   2. POSTGRES_URI  — legacy env var used in local .env
+ *   3. Individual PGHOST / PGPORT / PGDATABASE / PGUSER / PGPASSWORD vars
  */
 const { Sequelize } = require('sequelize');
 
-const uri = process.env.POSTGRES_URI
+const uri = process.env.DATABASE_URL
+         || process.env.POSTGRES_URI
          || `postgres://${process.env.PGUSER}:${process.env.PGPASSWORD}`
           + `@${process.env.PGHOST || 'localhost'}:${process.env.PGPORT || 5432}`
           + `/${process.env.PGDATABASE || 'ayurcare'}`;
