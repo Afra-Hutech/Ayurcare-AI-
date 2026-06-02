@@ -2,11 +2,9 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'doctor_portal_secret_key_123';
-const JWT_FALLBACK_SECRETS = [
-  'doctor_portal_secret_key_123',
-  'doctor_portal_secure_key_123',
-  'ayurcare_secret_2025',
-].filter((secret) => secret && secret !== JWT_SECRET);
+// No fallback secrets — all clients must use the current JWT_SECRET.
+// Old MongoDB-era tokens are rejected by the UUID check in tryDecode().
+const JWT_FALLBACK_SECRETS = [];
 
 const verifyWithSecret = (token, secret) => new Promise((resolve, reject) => {
   jwt.verify(token, secret, (err, decoded) => {
