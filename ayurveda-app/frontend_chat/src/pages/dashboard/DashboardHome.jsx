@@ -241,10 +241,11 @@ const DashboardHome = () => {
         if (!mounted) return
         setPatientProfile(res.data)
         setVitalsForm({
-          age: res.data?.age != null ? String(res.data.age) : "",
+          age:    res.data?.age    != null ? String(res.data.age) : "",
           gender: res.data?.gender || "",
-          height: res.data?.height || "",
-          weight: res.data?.weight || "",
+          // normalizeHeightForStorage converts "160.00" → "160 cm" and "160 cm" → "160 cm"
+          height: normalizeHeightForStorage(res.data?.height || ""),
+          weight: normalizeWeightForStorage(res.data?.weight || ""),
         })
         persistPatientUser(res.data)
       } catch {
@@ -282,10 +283,10 @@ const DashboardHome = () => {
       persistPatientUser(res.data)
       window.dispatchEvent(new CustomEvent('profile:updated', { detail: res.data }))
       setVitalsForm({
-        age: res.data?.age != null ? String(res.data.age) : "",
+        age:    res.data?.age != null ? String(res.data.age) : "",
         gender: res.data?.gender || "",
-        height: res.data?.height || "",
-        weight: res.data?.weight || "",
+        height: normalizeHeightForStorage(res.data?.height || ""),
+        weight: normalizeWeightForStorage(res.data?.weight || ""),
       })
       persistPatientUser(res.data)
       setVitalsEdit(false)

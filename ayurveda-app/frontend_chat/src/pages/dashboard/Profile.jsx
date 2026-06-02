@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { User, Phone, Mail, MapPin, Calendar, Edit2, CheckCircle2, Shield, Heart, Activity, ChevronRight, Lock, Loader2, Plus } from 'lucide-react';
 import api, { patientApi } from '../../services/api';
 import { persistPatientUser } from '../../utils/patientUser';
+import { normalizeHeightForStorage, normalizeWeightForStorage } from '../../utils/bmi';
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -26,10 +27,11 @@ const Profile = () => {
       phone:        userData.phone        || '',
       address:      userData.address      || '',
       profileImage: userData.profileImage || '',
-      age:          userData.age    != null ? String(userData.age)    : '',
+      age:          userData.age    != null ? String(userData.age) : '',
       gender:       userData.gender       || '',
-      height:       userData.height != null ? String(userData.height) : '',
-      weight:       userData.weight != null ? String(userData.weight) : '',
+      // normalise so "160.00" (old DECIMAL) becomes "160 cm" like "160 cm" (new VARCHAR)
+      height:       normalizeHeightForStorage(userData.height || ''),
+      weight:       normalizeWeightForStorage(userData.weight || ''),
     });
   };
 

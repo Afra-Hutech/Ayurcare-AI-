@@ -176,16 +176,10 @@ const updateProfile = async (req, res) => {
       Object.entries(req.body).filter(([k]) => !forbidden.includes(k))
     );
 
-    // height / weight come as strings like "170 cm" — extract numeric portion
-    // so they don't crash Postgres's DECIMAL column
-    const parseNumeric = (v) => {
-      if (v == null || v === '') return null;
-      const n = parseFloat(String(v).replace(/[^\d.]/g, ''));
-      return Number.isFinite(n) ? n : null;
-    };
-    if ('height' in raw) raw.height = parseNumeric(raw.height);
-    if ('weight' in raw) raw.weight = parseNumeric(raw.weight);
-    if ('age'    in raw) {
+    // height / weight stored as VARCHAR — pass through as-is (e.g. "160 cm", "69 kg")
+    if ('height' in raw) raw.height = raw.height ? String(raw.height).trim() || null : null;
+    if ('weight' in raw) raw.weight = raw.weight ? String(raw.weight).trim() || null : null;
+    if ('age' in raw) {
       const a = parseInt(raw.age, 10);
       raw.age = Number.isFinite(a) && a > 0 ? a : null;
     }
